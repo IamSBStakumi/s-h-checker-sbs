@@ -1,6 +1,7 @@
 # s-h-checker-sbs
 
 Program for detecting packages infected in the npm supply chain.
+![Javascript](https://img.shields.io/badge/-Javascript-F2C63C.svg?logo=javascript&style=for-the-badge)
 
 ## How to Use
 
