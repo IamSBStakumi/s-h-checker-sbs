@@ -1,6 +1,6 @@
 # s-h-checker-sbs
 
-npm サプライチェーンに感染したパッケージの検出用プログラム
+Program for detecting packages infected in the npm supply chain.
 
 ## How to Use
 
