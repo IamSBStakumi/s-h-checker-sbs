@@ -33,7 +33,7 @@ function analyzeYarnLock(filePath) {
     let currentEntry = null;
     let currentVersion = null;
 
-    for (let i = 0; i < lines.length; ++i) {
+    for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
 
       // パッケージ名の行
@@ -43,12 +43,13 @@ function analyzeYarnLock(filePath) {
         !line.startsWith(" ") &&
         !line.startsWith("#")
       ) {
+        // パッケージ名を抽出
         const packageMatch = line.match(
-          /^"?([^"@]+(?:@[^"\/]+\/[^"@]+|@[^"\/]+)??)@[^"]*"?:/
+          /^"?([^"]+?(?:@[^"\/]+\/[^"@]+|@[^"\/]+)?)@[^"]*"?:/
         );
         if (packageMatch) {
           currentEntry = packageMatch[1];
-          currentVersion = null; // Reset version for new entry
+          currentVersion = null; // 参照するべきバージョン情報をリセット
         }
       }
 
@@ -70,13 +71,13 @@ function analyzeYarnLock(filePath) {
         }
         currentEntry = null; // 次のエントリのためにリセット
       }
-
-      return compromised;
     }
-  } catch (error) {
-    logger.error("Error occurred while analyzing yarn.lock:", error);
 
-    throw new Error("Failed to analyze yarn.lock");
+    return compromised;
+  } catch (error) {
+    logger.error("Error occurred while analyzing yarn.lock");
+
+    throw new Error("Failed to analyze yarn.lock: " + filePath);
   }
 }
 
