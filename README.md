@@ -21,3 +21,7 @@ chmod +x s-h-checker-sbs/shai-hulud-checker.ts
 ```bash
 node s-h-checker-sbs/shai-hulud-checker.ts /path/to/your/projects
 ```
+
+## Reference Materials
+
+- https://socket.dev/blog/ongoing-supply-chain-attack-targets-crowdstrike-npm-packages
