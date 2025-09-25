@@ -1,6 +1,9 @@
 # s-h-checker-sbs
 
+日本語 | [English](./README.md)
+
 npm サプライチェーン攻撃によって、感染してしまったパッケージの検出用プログラム
+
 ![Javascript](https://img.shields.io/badge/-Javascript-F2C63C.svg?logo=javascript&style=for-the-badge)
 
 ## 使用方法
