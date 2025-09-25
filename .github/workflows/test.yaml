@@ -1,0 +1,11 @@
+name: Run Tests on Push
+on: [push]
+
+jobs:
+  test:
+    runs-on: node:24.8.0-bookworm-slim
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Do Test
+        run: node --test
