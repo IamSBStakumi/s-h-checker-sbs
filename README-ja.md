@@ -11,19 +11,20 @@ npm サプライチェーン攻撃によって、感染してしまったパッ�
 1. Copy repository
 
 ```bash
-git clone git@github.com:IamSBStakumi/sh-checker-sbs.git
+git clone git@github.com:IamSBStakumi/shai-hulud-checker.git
+cd shai-hulud-checker
 ```
 
 2. 実行権限付与(必要に応じて)
 
 ```bash
-chmod +x sh-checker-sbs/main.js
+chmod +x main.js
 ```
 
 3. 実行
 
 ```bash
-node sh-checker-sbs/main.js /path/to/your/projectDir
+node main.js /path/to/your/projectDir
 ```
 
 ### 侵害を受けたパッケージリストの更新をするには
