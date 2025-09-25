@@ -1,4 +1,4 @@
-# s-h-checker-sbs = Shai-Hulud Checker By SBStakumi
+# Shai-Hulud Checker
 
 日本語 | [English](./README.md)
 
