@@ -1,46 +1,8 @@
 const fs = require("fs");
 const logger = require("../console/logger");
-const shaiHuludCompromisedPackages = require("../list/packageList.json");
+const CheckPackageCompromised = require("./checkers/CheckPackageCompromised");
+const CheckDependenciesCompromised = require("./checkers/CheckDependenciesCompromised");
 
-// packageName: string, version: string
-const CheckPackageCompromised = (packageName, version) => {
-  const found = shaiHuludCompromisedPackages.find(
-    (p) => p.package === packageName
-  );
-  // 侵害されたパッケージではない
-  if (!found) {
-    return {
-      compromised: false,
-      message: `${packageName} is not compromised.`,
-      isMatchVersion: false,
-    };
-  }
-
-  // バージョンの引数が与えられず、バージョンの検証ができなかった時(ほぼ起こらないはず)
-  if (!version) {
-    return {
-      compromised: true,
-      message: `${packageName} is compromised, but version verification could not be performed.`,
-      isMatchVersion: false,
-    };
-  }
-
-  const versionText = version.replace(/^[\^~]/);
-  const isCompromisedVersion = found.version.includes(versionText);
-
-  // 侵害パッケージ名とバージョンが一致するかどうかでメッセージを変更
-  const messageText = isCompromisedVersion
-    ? `${packageName} is compromised!`
-    : `${packageName} is compromised, but it is not the compromised version.`;
-
-  return {
-    compromised: true,
-    message: messageText,
-    isMatchVersion: isCompromisedVersion,
-  };
-};
-
-// yarn.lockを解析
 function analyzeYarnLock(filePath) {
   try {
     const content = fs.readFileSync(filePath, "utf8");
@@ -49,30 +11,51 @@ function analyzeYarnLock(filePath) {
     const lines = content.split("\n");
     let currentEntry = null;
     let currentVersion = null;
+    let dependEntry = null;
+    let dependVersion = null;
+    let isDependency = false;
+
+    // dependencies:に含まれるパッケージ検出用の正規表現
+    const devRegex = /^"?[@A-Za-z0-9._\-\/]+"?\s+"[^"]+"$/;
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
+      // 空行なら変数をリセット
+      if (line === "") {
+        currentEntry = null;
+        currentVersion = null;
+        dependEntry = null;
+        dependVersion = null;
+        isDependency = false;
 
-      // yarn.lock中のパッケージ名の行
+        continue;
+      }
+
+      // 依存パッケージ検証モードのフラグを立てる
+      if (currentEntry && line.startsWith("dependencies:")) {
+        isDependency = true;
+      }
+
+      // yarn.lock中の依存パッケージ名の行
       if (
         line.includes("@") &&
         line.includes(":") &&
         !line.startsWith(" ") &&
-        !line.startsWith("#")
+        !line.startsWith("#") &&
+        !isDependency
       ) {
-        // yarn.lock中のパッケージ名情報を抽出
+        // yarn.lock中の依存パッケージ名情報を抽出
         const packageMatch = line.match(
           // スコープ(@始まり)の有無に関わらずパッケージ名が含まれる行がマッチするようにする
           /^"?([^"]+?(?:@[^"\/]+\/[^"@]+|@[^"\/]+)?)@[^"]*"?:/
         );
         if (packageMatch) {
           currentEntry = packageMatch[1];
-          currentVersion = null; // 参照するべきバージョン情報をリセット
         }
       }
 
-      // yarn.lock中のバージョン情報を抽出
-      if (line.startsWith('version "') && currentEntry) {
+      // yarn.lock中における依存パッケージのバージョン情報を抽出
+      if (line.startsWith('version "') && currentEntry && !isDependency) {
         const versionMatch = line.match(/version "([^"]+)"/);
         if (versionMatch) {
           currentVersion = versionMatch[1];
@@ -88,7 +71,27 @@ function analyzeYarnLock(filePath) {
             });
           }
         }
-        currentEntry = null; // 次のエントリのためにリセット
+      }
+
+      // 依存パッケージが依存しているパッケージも検証
+      if (!line.startsWith('version "') && devRegex.test(line)) {
+        const [pkg, ver] = line.trim().split(/\s+/, 2);
+        // ダブルクォートを除去
+        dependEntry = pkg.replace(/^"|"$/g, "");
+        dependVersion = ver.replace(/^"|"$/g, "");
+        const result = CheckDependenciesCompromised(
+          dependEntry,
+          dependVersion,
+          currentEntry
+        );
+        if (result.compromised) {
+          compromised.push({
+            package: dependEntry,
+            version: dependVersion,
+            message: result.message,
+            isMatchVersion: result.isMatchVersion,
+          });
+        }
       }
     }
 
