@@ -33,7 +33,7 @@ test("analyzeYarnLock関数が侵害されたパッケージを検出可能", ()
   logger.log("\n\n");
 
   assert(Array.isArray(result), "Result should be an array");
-  assert(result.length === 2, "Should find compromised packages");
+  assert(result.length === 4, `Find ${result.length} compromised packages`);
   assert(result[0].package === "@crowdstrike/commitlint");
   assert(result[0].version === "8.1.1");
   assert(result[0].isMatchVersion);
