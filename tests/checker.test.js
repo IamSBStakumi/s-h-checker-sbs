@@ -76,3 +76,19 @@ test("analyzeYarnLock関数で侵害の有無が混在したパッケージの�
     assert(r.package !== "oradm-to-gql");
   }
 });
+
+test("複数エントリが含まれている場合でも侵害パッケージの検出可能", () => {
+  const testFilePath = path.resolve(
+    __dirname,
+    "fixtures",
+    "multientry.yarn.lock"
+  );
+
+  const result = analyzer(testFilePath);
+  logger.info("複数エントリが含まれている場合に検出可能か確認するテストのログ");
+  checkMessage(result);
+  logger.log("\n");
+
+  assert(Array.isArray(result), "Result should be an array");
+  assert(result.length === 1, `Find ${result.length} compromised packages`);
+});
