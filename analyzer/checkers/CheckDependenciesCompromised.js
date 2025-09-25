@@ -25,17 +25,17 @@ const CheckDependenciesCompromised = (packageName, version, dependent) => {
     };
   }
 
-  const isCompromisedVersion = CompareSemVer(version, found.version);
+  const isIncludedCompromisedVersion = CompareSemVer(version, found.version);
 
   // 侵害パッケージ名とバージョンが一致するかどうかでメッセージを変更
-  const messageText = isCompromisedVersion
-    ? `${packageName} (This is ${dependent} depends on) is compromised!`
-    : `${packageName} (This is ${dependent} depends on) is compromised, but it is not the compromised version.`;
+  const messageText = isIncludedCompromisedVersion
+    ? `${packageName} (This is ${dependent} depends on) is compromised! Compromised Version is included!`
+    : `${packageName} (This is ${dependent} depends on) is compromised, but Compromised version is not included.`;
 
   return {
     compromised: true,
     message: messageText,
-    isMatchVersion: isCompromisedVersion,
+    isMatchVersion: isIncludedCompromisedVersion,
   };
 };
 
