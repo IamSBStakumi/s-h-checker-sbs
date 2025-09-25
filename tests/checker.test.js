@@ -4,6 +4,7 @@ const path = require("path");
 const analyzer = require("../analyzer/analyzeYarnLock");
 const logger = require("../console/logger");
 
+// テストでも実行結果を確認できるようにしている
 function checkMessage(compromised) {
   if (compromised.length > 0) {
     for (const pkg of compromised) {
@@ -30,7 +31,7 @@ test("analyzeYarnLock関数が侵害されたパッケージを検出可能", ()
   const result = analyzer(testFilePath);
   logger.info("侵害パッケージ検出テストのログ");
   checkMessage(result);
-  logger.log("\n\n");
+  logger.log("\n");
 
   assert(Array.isArray(result), "Result should be an array");
   assert(result.length === 4, `Find ${result.length} compromised packages`);
@@ -50,8 +51,28 @@ test("analyzeYarnLock関数で侵害されていないパッケージは出力�
     "侵害されていないパッケージは検出しないことを確認するテストのログ"
   );
   checkMessage(result);
-  logger.log("\n\n");
+  logger.log("\n");
 
   assert(Array.isArray(result), "Result should be an array");
   assert(result.length === 0);
+});
+
+test("analyzeYarnLock関数で侵害の有無が混在したパッケージの検証にも対応できている", () => {
+  const testFilePath = path.resolve(__dirname, "fixtures", "mixed.yarn.lock");
+
+  const result = analyzer(testFilePath);
+  logger.info(
+    "攻撃されたパッケージが混ざっているファイルの検証にも対応可能か確認するテストのログ"
+  );
+  checkMessage(result);
+  logger.log("\n");
+
+  assert(Array.isArray(result), "Result should be an array");
+  assert(result.length === 6, `Find ${result.length} compromised packages`);
+  // 攻撃を受けた依存パッケージだが、セマンティックバージョン範囲に侵害バージョンが含まれていない
+  assert(result[4].message.includes("Compromised version is not included."));
+  for (const r of result) {
+    // 侵害を受けたパッケージだが、該当バージョンは侵害されていない
+    assert(r.package !== "oradm-to-gql");
+  }
 });

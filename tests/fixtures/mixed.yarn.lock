@@ -1,0 +1,40 @@
+"@babel/traverse@^7.25.9":
+  version "7.26.4"
+  dependencies:
+    "@babel/code-frame" "^7.26.2"
+    "@babel/generator" "^7.26.3"
+    "@babel/parser" "^7.26.3"
+    "@babel/template" "^7.25.9"
+    "@babel/types" "^7.26.3"
+    debug "^4.3.1"
+    globals "^11.1.0"
+
+"@ctrl/shared-torrent@^6.3.0":
+  version "6.3.1"
+  dependencies:
+    "@ahmedhfarag/ngx-virtual-scroller" "^4.0.4"
+    "@art-ws/common" "^2.0.28"
+
+"oradm-to-gql":
+  version "35.0.13"
+
+"@emnapi/runtime@^1.2.0":
+  version "1.3.1"
+  dependencies:
+    tslib "^2.4.0"
+    "@crowdstrike/commitlint" "^8.1.1"
+
+"@eslint/eslintrc@^2.1.4":
+  version "2.1.4"
+  dependencies:
+    ajv "^6.12.4"
+    debug "^4.3.2"
+    espree "^9.6.0"
+    globals "^13.19.0"
+    ignore "^5.2.0"
+    import-fresh "^3.2.1"
+    js-yaml "^4.1.0"
+    minimatch "^3.1.2"
+    strip-json-comments "^3.1.1"
+    rxnt-authentication "^0.0.2"
+    ngx-ws "^1.0.4"
