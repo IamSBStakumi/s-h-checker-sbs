@@ -7,8 +7,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install node
-        run: sudo apt install -y nodejs
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 24
 
       - name: Do Test
         run: node --test
