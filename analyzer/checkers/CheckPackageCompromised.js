@@ -2,11 +2,11 @@ const shaiHuludCompromisedPackages = require("../../list/packageList.json");
 
 // packageName: string, version: string
 const CheckPackageCompromised = (packageName, version) => {
-  const found = shaiHuludCompromisedPackages.find(
+  const foundArr = shaiHuludCompromisedPackages.filter(
     (p) => p.package === packageName
   );
   // 侵害されたパッケージではない
-  if (!found) {
+  if (!foundArr || foundArr.length === 0) {
     return {
       compromised: false,
       message: `${packageName} is not compromised.`,
@@ -24,7 +24,11 @@ const CheckPackageCompromised = (packageName, version) => {
   }
 
   const versionText = version.replace(/^[\^~]/);
-  const isCompromisedVersion = found.version.includes(versionText);
+  let isCompromisedVersion = false;
+  for (const found of foundArr) {
+    isCompromisedVersion = found.version.includes(versionText);
+    if (isCompromisedVersion) break;
+  }
 
   // 侵害パッケージ名とバージョンが一致するかどうかでメッセージを変更
   const messageText = isCompromisedVersion

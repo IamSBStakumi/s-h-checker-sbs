@@ -4,11 +4,11 @@ const shaiHuludCompromisedPackages = require("../../list/packageList.json");
 // packageName: string, version: string, dependent: string
 // この関数において、packageNameはdependentが依存しているパッケージ
 const CheckDependenciesCompromised = (packageName, version, dependent) => {
-  const found = shaiHuludCompromisedPackages.find(
+  const foundArr = shaiHuludCompromisedPackages.filter(
     (p) => p.package === packageName
   );
   // 侵害されたパッケージではない
-  if (!found) {
+  if (!foundArr || foundArr.length === 0) {
     return {
       compromised: false,
       message: `${packageName} (This is ${dependent} depends on) is not compromised.`,
@@ -25,7 +25,11 @@ const CheckDependenciesCompromised = (packageName, version, dependent) => {
     };
   }
 
-  const isIncludedCompromisedVersion = CompareSemVer(version, found.version);
+  let isIncludedCompromisedVersion = false;
+  for (const found of foundArr) {
+    isIncludedCompromisedVersion = CompareSemVer(version, found.version);
+    if (isIncludedCompromisedVersion) break;
+  }
 
   // 侵害パッケージ名とバージョンが一致するかどうかでメッセージを変更
   const messageText = isIncludedCompromisedVersion
