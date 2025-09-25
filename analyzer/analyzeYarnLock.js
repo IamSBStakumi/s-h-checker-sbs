@@ -45,10 +45,15 @@ function analyzeYarnLock(filePath) {
         !isDependency
       ) {
         // yarn.lock中の依存パッケージ名情報を抽出
-        const packageMatch = line.match(
+        // 複数エントリが含まれる場合を考慮
+        const entries = line
+          .split(",")
+          .map((e) => e.trim().replace(/^"|"$/g, ""));
+        const packageMatch = entries[0].match(
           // スコープ(@始まり)の有無に関わらずパッケージ名が含まれる行がマッチするようにする
-          /^"?([^"]+?(?:@[^"\/]+\/[^"@]+|@[^"\/]+)?)@[^"]*"?:/
+          /^(@?[^@]+\/?[^@]*)@(.+)$/
         );
+        console.log(entries[0]);
         if (packageMatch) {
           currentEntry = packageMatch[1];
         }
