@@ -16,7 +16,7 @@ function scanDirectory(targetPath) {
     return;
   }
 
-  // yarn.lockのパス
+  // yarn.lockのパスを生成
   const yarnLockPath = path.join(absolutePath, "yarn.lock");
 
   if (!fs.existsSync(yarnLockPath)) {
@@ -24,12 +24,14 @@ function scanDirectory(targetPath) {
     return;
   }
 
+  // type is { package: string, version: string, message: string, isMatchVersion: boolean }[]
   let compromised = [];
 
   try {
     compromised = analyzeYarnLock(yarnLockPath);
     logger.info("Analyzed yarn.lock successfully: " + absolutePath);
   } catch (error) {
+    // エラーメッセージはanalyzeYarnLock関数で出している。関数終了だけでよい。
     return;
   }
 
@@ -37,7 +39,14 @@ function scanDirectory(targetPath) {
     logger.danger(`Found ${compromised.length} compromised packages!`);
 
     for (const pkg of compromised) {
-      logger.danger(`Package: ${pkg.package}, Version: ${pkg.version}`);
+      if (compromised.isMatchVersion) {
+        logger.danger(`Package: ${pkg.package}, Version: ${pkg.version}`);
+        logger.danger(`${pkg.message}`);
+      } else {
+        // 侵害されたパッケージはあるが、バージョンは一致しなかった時
+        logger.info(`Package: ${pkg.package}, Version: ${pkg.version}`);
+        logger.info(`${pkg.message}`);
+      }
     }
   } else {
     logger.success("No compromised packages found.");
@@ -45,6 +54,7 @@ function scanDirectory(targetPath) {
 }
 
 function main() {
+  // コマンドから検査対象プロジェクトディレクトリを読み取り
   const args = process.argv.slice(2);
 
   if (args.length === 0) {
