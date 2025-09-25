@@ -11,19 +11,20 @@ Program for detecting packages infected in the npm supply chain.
 1. Copy repository
 
 ```bash
-git clone git@github.com:IamSBStakumi/sh-checker-sbs.git
+git clone git@github.com:IamSBStakumi/shai-hulud-checker.git
+cd shai-hulud-checker
 ```
 
 2. Granting execute permissions
 
 ```bash
-chmod +x sh-checker-sbs/main.js
+chmod +x main.js
 ```
 
 3. Execute
 
 ```bash
-node sh-checker-sbs/main.js /path/to/your/projectDir
+node main.js /path/to/your/projectDir
 ```
 
 ### To Update Compromised Package List
