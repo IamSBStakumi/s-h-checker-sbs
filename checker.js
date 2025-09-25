@@ -39,7 +39,7 @@ function scanDirectory(targetPath) {
     logger.danger(`Found ${compromised.length} compromised packages!`);
 
     for (const pkg of compromised) {
-      if (compromised.isMatchVersion) {
+      if (pkg.isMatchVersion) {
         logger.danger(`Package: ${pkg.package}, Version: ${pkg.version}`);
         logger.danger(`${pkg.message}`);
       } else {
