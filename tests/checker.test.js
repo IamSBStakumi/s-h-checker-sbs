@@ -91,4 +91,25 @@ test("複数エントリが含まれている場合でも侵害パッケージ�
 
   assert(Array.isArray(result), "Result should be an array");
   assert(result.length === 1, `Find ${result.length} compromised packages`);
+  assert(result[0].isMatchVersion);
+});
+
+test("マルチエイリアス形式のパッケージでも侵害パッケージの検出可能", () => {
+  const testFilePath = path.resolve(
+    __dirname,
+    "fixtures",
+    "multialias.yarn.lock"
+  );
+
+  const result = analyzer(testFilePath);
+  logger.info(
+    "マルチエイリアス形式のパッケージでも侵害パッケージの検出可能か確認するテストのログ"
+  );
+  checkMessage(result);
+  logger.log("\n");
+
+  assert(Array.isArray(result), "Result should be an array");
+  assert(result.length === 1, `Find ${result.length} compromised packages`);
+  console.log(result[0].version);
+  assert(result[0].isMatchVersion);
 });
