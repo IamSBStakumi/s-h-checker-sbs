@@ -53,7 +53,6 @@ function analyzeYarnLock(filePath) {
           // スコープ(@始まり)の有無に関わらずパッケージ名が含まれる行がマッチするようにする
           /^(@?[^@]+\/?[^@]*)@(.+)$/
         );
-        console.log(entries[0]);
         if (packageMatch) {
           currentEntry = packageMatch[1];
         }
