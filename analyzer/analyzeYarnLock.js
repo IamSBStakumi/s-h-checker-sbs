@@ -51,7 +51,7 @@ function analyzeYarnLock(filePath) {
           .map((e) => e.trim().replace(/^"|"$/g, ""));
         const packageMatch = entries[0].match(
           // スコープ(@始まり)の有無に関わらずパッケージ名が含まれる行がマッチするようにする
-          /^(@?[^@]+\/?[^@]*)@(.+)$/
+          /^(@?[^@]+\/?[^@]*)(?:@npm:)?@(.+)$/
         );
         if (packageMatch) {
           currentEntry = packageMatch[1];
