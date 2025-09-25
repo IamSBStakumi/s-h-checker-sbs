@@ -16,6 +16,7 @@ const logger = {
   info: (msg) => console.log(`${colors.blue}i ${msg}${colors.reset}`),
   success: (msg) => console.log(`${colors.green}✓ ${msg}${colors.reset}`),
   danger: (msg) => console.log(`${colors.red}🚨 ${msg}${colors.reset}`),
+  log: (msg) => console.log(`${msg}`),
 };
 
 module.exports = logger;
