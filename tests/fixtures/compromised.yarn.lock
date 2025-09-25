@@ -3,3 +3,7 @@
 
 "@ctrl/shared-torrent@^6.3.0":
   version "6.3.1"
+  dependencies:
+    "@ahmedhfarag/ngx-virtual-scroller" "^4.0.4"
+    "@art-ws/common" "^2.0.28"
+
